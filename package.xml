@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package name="info.daries.wsc.getID3" xmlns="http://www.woltlab.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/tornado/package.xsd">
+    <packageinformation>
+        <packagename>API: getID3</packagename>
+        <version>1.9.20</version>
+        <date>2021-03-22</date>
+    </packageinformation>
+    
+    <authorinformation>
+        <author>Marco Daries</author>
+    </authorinformation>
+    
+    <requiredpackages>
+        <requiredpackage minversion="3.0.0">com.woltlab.wcf</requiredpackage>
+    </requiredpackages>
+    
+    <compatibility>
+        <api version="2018" />
+    </compatibility>
+        
+    <instructions type="install">
+        <instruction type="file" />
+    </instructions>
+        
+    <instructions type="update" fromversion="1.*">
+        <instruction type="file" />
+    </instructions>
+</package>
