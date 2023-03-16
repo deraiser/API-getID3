@@ -119,7 +119,7 @@ class GetID3
 	public $option_md5_data          = false;
 
 	/**
-	 * Use MD5 of source file if availble - only FLAC and OptimFROG
+	 * Use MD5 of source file if available - only FLAC and OptimFROG
 	 *
 	 * @var bool
 	 */
@@ -319,7 +319,7 @@ class GetID3
 	 */
 	protected $startup_warning = '';
 
-	const VERSION           = '2.0.x-202109171300';
+	const VERSION           = '2.0.x-202207161647';
 	const FREAD_BUFFER_SIZE = 32768;
 
 	const ATTACHMENTS_NONE   = false;
@@ -432,7 +432,7 @@ class GetID3
 			$this->info['php_memory_limit'] = (($this->memory_limit > 0) ? $this->memory_limit : false);
 
 			// remote files not supported
-			if (preg_match('#^(ht|f)tp://#', $filename)) {
+			if (preg_match('#^(ht|f)tps?://#', $filename)) {
 				throw new Exception('Remote files are not supported - please copy the file locally first');
 			}
 
@@ -887,14 +887,15 @@ class GetID3
 							'mime_type' => 'audio/x-monkeys-audio',
 						),
 
-// has been known to produce false matches in random files (e.g. JPEGs), leave out until more precise matching available
-//				// MOD  - audio       - MODule (assorted sub-formats)
-//				'mod'  => array(
-//							'pattern'   => '^.{1080}(M\\.K\\.|M!K!|FLT4|FLT8|[5-9]CHN|[1-3][0-9]CH)',
-//							'module'    => 'Audio\\Mod',
-//							'option'    => 'mod',
-//							'mime_type' => 'audio/mod',
-//						),
+
+				// MOD  - audio       - MODule (SoundTracker)
+				'mod'  => array(
+							//'pattern'   => '^.{1080}(M\\.K\\.|M!K!|FLT4|FLT8|[5-9]CHN|[1-3][0-9]CH)', // has been known to produce false matches in random files (e.g. JPEGs), leave out until more precise matching available
+							'pattern'   => '^.{1080}(M\\.K\\.)',
+							'module'    => 'Audio\\Mod',
+							'option'    => 'mod',
+							'mime_type' => 'audio/mod',
+						),
 
 				// MOD  - audio       - MODule (Impulse Tracker)
 				'it'   => array(
@@ -922,7 +923,7 @@ class GetID3
 
 				// MPC  - audio       - Musepack / MPEGplus
 				'mpc'  => array(
-							'pattern'   => '^(MPCK|MP\\+|[\\x00\\x01\\x10\\x11\\x40\\x41\\x50\\x51\\x80\\x81\\x90\\x91\\xC0\\xC1\\xD0\\xD1][\\x20-\\x37][\\x00\\x20\\x40\\x60\\x80\\xA0\\xC0\\xE0])',
+							'pattern'   => '^(MPCK|MP\\+)',
 							'module'    => 'Audio\\Mpc',
 							'mime_type' => 'audio/x-musepack',
 						),
@@ -1331,6 +1332,13 @@ class GetID3
 			// use assume format on these if format detection failed
 			$GetFileFormatArray = $this->GetFileFormatArray();
 			$info = $GetFileFormatArray['mp3'];
+			return $info;
+		} elseif (preg_match('#\\.mp[cp\\+]$#i', $filename) && preg_match('#[\x00\x01\x10\x11\x40\x41\x50\x51\x80\x81\x90\x91\xC0\xC1\xD0\xD1][\x20-37][\x00\x20\x40\x60\x80\xA0\xC0\xE0]#s', $filedata)) {
+			// old-format (SV4-SV6) Musepack header that has a very loose pattern match and could falsely match other data (e.g. corrupt mp3)
+			// only enable this pattern check if the filename ends in .mpc/mpp/mp+
+			$GetFileFormatArray = $this->GetFileFormatArray();
+			$info = $GetFileFormatArray['mpc'];
+			$info['include'] = 'module.'.$info['group'].'.'.$info['module'].'.php';
 			return $info;
 		} elseif (preg_match('#\\.cue$#i', $filename) && preg_match('#FILE "[^"]+" (BINARY|MOTOROLA|AIFF|WAVE|MP3)#', $filedata)) {
 			// there's not really a useful consistent "magic" at the beginning of .cue files to identify them

@@ -2,8 +2,8 @@
 <package name="info.daries.wsc.getID3" xmlns="http://www.woltlab.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/tornado/package.xsd">
     <packageinformation>
         <packagename>API: getID3</packagename>
-        <version>2.0.0 Beta 4</version>
-        <date>2020-11-19</date>
+        <version>2.0.0 Beta 5</version>
+        <date>2022-10-28</date>
     </packageinformation>
     
     <authorinformation>
@@ -11,20 +11,15 @@
     </authorinformation>
     
     <requiredpackages>
-        <requiredpackage minversion="5.4.0">com.woltlab.wcf</requiredpackage>
+        <requiredpackage minversion="5.5.0">com.woltlab.wcf</requiredpackage>
     </requiredpackages>
         
     <instructions type="install">
         <instruction type="file" />
     </instructions>
         
-    <instructions type="update" fromversion="1.*">
-        <instruction type="file">files_pre.tar</instruction>
-        <instruction type="script">acp/info.daries.wsc.getID3_update.php</instruction>
-        <instruction type="file" />
-    </instructions>
-        
     <instructions type="update" fromversion="2.*">
+        <instruction type="script">acp/info.daries.wsc.getID3_update.php</instruction>
         <instruction type="file" />
     </instructions>
 </package>
